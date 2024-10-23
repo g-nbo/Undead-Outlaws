@@ -1,10 +1,12 @@
 import pygame
+import classes
+import random
 print("hello world!")
 
 pygame.init()
 
 # Create screen
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.6)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -22,14 +24,20 @@ charRect = characterSprite.get_rect()
 charRect.center = (0 + 70, SCREEN_HEIGHT - 70)
 
 playerHealth = 5
+playerCanShoot = True
 
 # Create enemy
 enemySprite = pygame.image.load("../images/dino-enemy-sprite.png")
-enemySprite = pygame.transform.scale(enemySprite, (enemySprite.get_width() * scale, enemySprite.get_height() * scale))
+# enemySprite = pygame.transform.scale(enemySprite, (enemySprite.get_width() * scale, enemySprite.get_height() * scale))
+#
+# enemyRect = enemySprite.get_rect()
+# enemyRect.center = (SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70)
+# canHit = True
 
-enemyRect = enemySprite.get_rect()
-enemyRect.center = (SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70)
-eHasHit = False
+# enemyHealth = 1
+
+zomb1 = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70, "zombie", 0.3, enemySprite)
+enemyArr = [zomb1]
 
 # Time
 clock = pygame.time.Clock()
@@ -37,11 +45,14 @@ clock = pygame.time.Clock()
 # Create basic game loop
 run = True
 while run:
-    screen.fill(("BLACK"))
+    screen.fill(("black"))
 
     screen.blit(characterSprite, charRect)
-    screen.blit(enemySprite, enemyRect)
+    screen.blit(zomb1.image, zomb1.rect)
+
     keys = pygame.key.get_pressed()
+    mouse_pos = pygame.mouse.get_pos()
+
 
     for event in pygame.event.get():
 
@@ -53,15 +64,37 @@ while run:
         if keys[pygame.K_d] and charRect.right < 1030:
             charRect = charRect.move(15, 0)
 
+        for i in range(len(enemyArr)):
+
+            if enemyArr[i].rect.collidepoint(mouse_pos) and event.type == pygame.MOUSEBUTTONDOWN:
+                enemyArr[i].health -= 1
+
+            if enemyArr[i].health <= 0:
+                enemyArr[i].canHit = False
+                enemyArr[i].rect = enemyArr[i].rect.move(-5000, -5000)
 
 
-    enemyRect = enemyRect.move(-3, 0)
-    if charRect.colliderect(enemyRect) and playerHealth > 1 and not eHasHit:
-        playerHealth -= 1
-        eHasHit = True
-        print("player health:", playerHealth)
-    elif charRect.colliderect(enemyRect) and playerHealth == 1:
-        print("player dead")
+    for i in range(len(enemyArr)):
+
+
+        zomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70, "zombie", 0.3, enemySprite)
+
+        screen.blit(enemyArr[i].image, enemyArr[i].rect)\
+
+        enemyArr[i].rect = enemyArr[i].rect.move(-3, 0)
+
+
+        if charRect.colliderect(enemyArr[i].rect) and playerHealth > 1 and enemyArr[i].canHit:
+            playerHealth -= 1
+            enemyArr[i].canHit = False
+            print("player health:", playerHealth)
+        elif charRect.colliderect(enemyArr[i].rect) and playerHealth == 1:
+            print("player dead")
+
+        if random.randint(1, 400) == 400 and enemyArr[i].alive:
+            enemyArr.append(zomb)
+            print("appending")
+
 
 
     pygame.display.update()
