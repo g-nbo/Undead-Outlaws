@@ -16,19 +16,19 @@ pygame.display.set_caption("Undead Outlaws")
 # Create initial character
 x = 200
 y = 200
-scale = 0.3
+scale = 0.5
 
-characterSprite = pygame.image.load("../images/test-sprite-game.png")
+characterSprite = pygame.image.load("../images/player_2.png")
 characterSprite = pygame.transform.scale(characterSprite, (characterSprite.get_width() * scale, characterSprite.get_height() * scale))
 
 charRect = characterSprite.get_rect()
-charRect.center = (0 + 70, SCREEN_HEIGHT - 70)
+charRect.center = (0 + 70, SCREEN_HEIGHT - 80)
 
 playerHealth = 3
 
 # Create enemy
-enemySprite = pygame.image.load("../images/dino-enemy-sprite.png")
-zomb1 = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70, "zombie", 0.3, enemySprite)
+enemySprite = pygame.image.load("../images/zombie_2.png")
+zomb1 = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 110, "zombie", 0.6, enemySprite)
 enemyArr = [zomb1]
 
 # level vars
@@ -54,8 +54,12 @@ healthText_rect.center = (140, SCREEN_HEIGHT // 10)
 bg = pygame.image.load("../images/zombie_background.jpg")
 bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+# initialize music
+pygame.mixer.init()
+
 # Time
 clock = pygame.time.Clock()
+
 
 # Create basic game loop
 run = True
@@ -64,14 +68,18 @@ while run:
 
     # change things like background depending on level using switch statement
     match level:
+        case 1:
+            bg = pygame.image.load("../images/level1_bg.jpg")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         case 2:
-            pass
+            bg = pygame.image.load("../images/level2_bg.jpg")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         case 3:
-            pass
+            bg = pygame.image.load("../images/level3_bg.png")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         case 4:
-            pass
-        case 5:
-            pass
+            bg = pygame.image.load("../images/level4_bg.png")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         case _:
             pass
 
@@ -96,13 +104,14 @@ while run:
 
         if keys[pygame.K_a] and charRect.left > -30:
              charRect = charRect.move(-15, 0)
-        if keys[pygame.K_d] and charRect.right < 1030:
+        if keys[pygame.K_d] and charRect.right < 1230:
             charRect = charRect.move(15, 0)
 
         for i in range(len(enemyArr)):
-
             if enemyArr[i].rect.collidepoint(mouse_pos) and event.type == pygame.MOUSEBUTTONDOWN:
                 enemyArr[i].health -= 1
+                shootSound = pygame.mixer.Sound("../sounds/shoot-1-81135.mp3")
+                shootSound.play()
 
             if enemyArr[i].health <= 0:
                 enemyArr[i].canHit = False
@@ -110,24 +119,29 @@ while run:
 
 
     for i in range(len(enemyArr)):
-        zomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 70, "zombie", 0.3, enemySprite)
+        zomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 100, "zombie", 0.6, enemySprite)
         screen.blit(enemyArr[i].image, enemyArr[i].rect)
         enemyArr[i].rect = enemyArr[i].rect.move(-(level * 2), 0)
 
         if charRect.colliderect(enemyArr[i].rect) and playerHealth > 1 and enemyArr[i].canHit:
+            biteSound = pygame.mixer.Sound("../sounds/zombie-bite-96528.mp3")
+            biteSound.play()
             playerHealth -= 1
             enemyArr[i].canHit = False
             print("player health:", playerHealth)
         elif charRect.colliderect(enemyArr[i].rect) and playerHealth == 1:
             # Game needs to restart completely if this happens
-            level = 1
-            enemyCount = 0
-            waited = False
-            playerHealth = 3
-            start = time.time()
+            # level = 1
+            # enemyCount = 0
+            # waited = False
+            playerHealth = 10
+            # start = time.time()
             print("player dead")
 
         if random.randint(1, 500) == 300 and enemyCount != (level * 2):
+            # match random.randint(1, 4):
+            #     case 1:
+
             enemyArr.append(zomb)
             enemyCount += 1
             print("appending")
@@ -136,7 +150,7 @@ while run:
             start = time.time()
             waited = True
 
-        if enemyCount == (level * 2) and time.time() - start > 5 and waited and level < 5:
+        if enemyCount == (level * 2) and time.time() - start > 5 and waited and level < 4:
             print("waited 3 seconds, next level")
             enemyCount = 0
             level += 1
