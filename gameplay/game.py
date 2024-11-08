@@ -73,6 +73,37 @@ gameMusic = pygame.mixer.Sound("../sounds/horror_music_clipped.mp3")
 gameMusic.play()
 # menuMusic.play()
 
+# buttons for menus
+play_img = pygame.image.load("../images/playbutton.png").convert_alpha()
+quit_img = pygame.image.load("../images/quitbutton.png").convert_alpha()
+instruct_img = pygame.image.load("../images/instructionsbutton.png").convert_alpha()
+menu_img = pygame.image.load("../images/mainmenubutton.png").convert_alpha()
+
+instruct_img = pygame.transform.scale(instruct_img, (275, 105))
+
+menu_full = pygame.image.load("../images/menuimage.png").convert_alpha()
+menu_full = pygame.transform.scale(menu_full, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+play_button = classes.Button(610, 300, play_img, 2.5)
+quit_button = classes.Button(610, 530, quit_img, 2)
+instructions_button = classes.Button(600, 415, instruct_img, 1)
+menu_button = classes.Button(600, 400, menu_img, 1.5)
+menu_full = classes.Button(600, 360, menu_full, 1)
+
+# stuff for instructions
+textfont = pygame.font.SysFont(None, 80)
+instructText = textfont.render("W and D to move", 1, (255, 255, 255))
+instructText2 = textfont.render("left and right", 1, (255, 255, 255))
+instructText3 = textfont.render("Click on zombie", 1, (255, 255, 255))
+instructText4 = textfont.render("to kill it", 1, (255, 255, 255))#
+
+# menu state for switching menus
+menu_state = "main"
+
+# Needed these out of main game loop for menu
+keys = pygame.key.get_pressed()
+mouse_pos = pygame.mouse.get_pos()
+
 # Time
 clock = pygame.time.Clock()
 
@@ -81,137 +112,155 @@ clock = pygame.time.Clock()
 run = True
 while run:
     screen.fill(("black"))
-
-    # change things like background depending on level using switch statement
-    match level:
-        case 1:
-            bg = pygame.image.load("../images/level1_bg.jpg")
-            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            levelText = pygame.image.load("../images/level1_real.png")
-            levelText = pygame.transform.scale(levelText, (800, 450))
-        case 2:
-            bg = pygame.image.load("../images/level2_bg.jpg")
-            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            levelText = pygame.image.load("../images/level2.png")
-            levelText = pygame.transform.scale(levelText, (800, 450))
-        case 3:
-            bg = pygame.image.load("../images/level3_bg.png")
-            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            levelText = pygame.image.load("../images/level3.png")
-            levelText = pygame.transform.scale(levelText, (800, 450))
-        case 4:
-            bg = pygame.image.load("../images/level4_bg.png")
-            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-            levelText = pygame.image.load("../images/level4.png")
-            levelText = pygame.transform.scale(levelText, (800, 450))
-        case _:
-            pass
-
-    match playerHealth:
-        case 5:
-            hearts = pygame.image.load("../images/hearts_5.png")
-        case 4:
-            hearts = pygame.image.load("../images/hearts_4.png")
-        case 3:
-            hearts = pygame.image.load("../images/hearts_3.png")
-        case 2:
-            hearts = pygame.image.load("../images/hearts_2.png")
-        case 1:
-            hearts = pygame.image.load("../images/hearts_1.png")
-        case 0:
-            hearts = pygame.image.load("../images/hearts_0.png")
-        case _:
-            hearts = pygame.image.load("../images/hearts_5.png")
-
-    screen.blit(bg, (0, 0))
-    screen.blit(characterSprite, charRect)
-    screen.blit(zomb1.image, zomb1.rect)
-    screen.blit(hearts, heartsRect)
-
-    keys = pygame.key.get_pressed()
-    mouse_pos = pygame.mouse.get_pos()
-
-    # levelText = gameFont.render(f"Level: {level}", None, (255, 255, 255))
-    healthText = gameFont.render(f"Health: {playerHealth}", None, (255, 255, 255))
-
-    screen.blit(levelText, levelText_rect)
-    # screen.blit(healthText, healthText_rect)
-
+        if menu_state == "main":
+        if quit_button.draw(screen):
+            run = False
+        if play_button.draw(screen):
+            while run:
+                clock.tick(60)
+                pygame.display.update()
+                # change things like background depending on level using switch statement
+                match level:
+                    case 1:
+                        bg = pygame.image.load("../images/level1_bg.jpg")
+                        bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                        levelText = pygame.image.load("../images/level1_real.png")
+                        levelText = pygame.transform.scale(levelText, (800, 450))
+                    case 2:
+                        bg = pygame.image.load("../images/level2_bg.jpg")
+                        bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                        levelText = pygame.image.load("../images/level2.png")
+                        levelText = pygame.transform.scale(levelText, (800, 450))
+                    case 3:
+                        bg = pygame.image.load("../images/level3_bg.png")
+                        bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                        levelText = pygame.image.load("../images/level3.png")
+                        levelText = pygame.transform.scale(levelText, (800, 450))
+                    case 4:
+                        bg = pygame.image.load("../images/level4_bg.png")
+                        bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+                        levelText = pygame.image.load("../images/level4.png")
+                        levelText = pygame.transform.scale(levelText, (800, 450))
+                    case _:
+                        pass
+            
+                match playerHealth:
+                    case 5:
+                        hearts = pygame.image.load("../images/hearts_5.png")
+                    case 4:
+                        hearts = pygame.image.load("../images/hearts_4.png")
+                    case 3:
+                        hearts = pygame.image.load("../images/hearts_3.png")
+                    case 2:
+                        hearts = pygame.image.load("../images/hearts_2.png")
+                    case 1:
+                        hearts = pygame.image.load("../images/hearts_1.png")
+                    case 0:
+                        hearts = pygame.image.load("../images/hearts_0.png")
+                    case _:
+                        hearts = pygame.image.load("../images/hearts_5.png")
+            
+                screen.blit(bg, (0, 0))
+                screen.blit(characterSprite, charRect)
+                screen.blit(zomb1.image, zomb1.rect)
+                screen.blit(hearts, heartsRect)
+            
+                keys = pygame.key.get_pressed()
+                mouse_pos = pygame.mouse.get_pos()
+            
+                # levelText = gameFont.render(f"Level: {level}", None, (255, 255, 255))
+                healthText = gameFont.render(f"Health: {playerHealth}", None, (255, 255, 255))
+            
+                screen.blit(levelText, levelText_rect)
+                # screen.blit(healthText, healthText_rect)
+            
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        run = False
+                    if keys[pygame.K_ESCAPE]:
+                        run = False
+            
+                    if keys[pygame.K_a] and charRect.left > -80:
+                         charRect = charRect.move(-15, 0)
+                    if keys[pygame.K_d] and charRect.right < 1230:
+                        charRect = charRect.move(15, 0)
+            
+                    for i in range(len(enemyArr)):
+                        if enemyArr[i].rect.collidepoint(mouse_pos) and event.type == pygame.MOUSEBUTTONDOWN:
+                            enemyArr[i].health -= 1
+                            shootSound = pygame.mixer.Sound("../sounds/shoot-1-81135.mp3")
+                            shootSound.set_volume(0.2)
+                            shootSound.play()
+            
+                        if enemyArr[i].health <= 0:
+                            enemyArr[i].canHit = False
+                            enemyArr[i].rect = enemyArr[i].rect.move(-5000, -5000)
+            
+            
+                for i in range(len(enemyArr)):
+                    dgZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, dgSprite)
+                    lgZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, lgSprite)
+                    redZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, redSprite)
+                    purpZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, purpleSprite)
+            
+            
+            
+                    screen.blit(enemyArr[i].image, enemyArr[i].rect)
+                    enemyArr[i].rect = enemyArr[i].rect.move(-(level * 2), 0)
+            
+                    if charRect.colliderect(enemyArr[i].rect) and playerHealth > 1 and enemyArr[i].canHit:
+                        biteSound = pygame.mixer.Sound("../sounds/zombie-bite-96528.mp3")
+                        biteSound.set_volume(0.5)
+                        biteSound.play()
+                        playerHealth -= 1
+                        enemyArr[i].canHit = False
+                        print("player health:", playerHealth)
+                    elif charRect.colliderect(enemyArr[i].rect) and playerHealth == 1:
+                        # Game needs to restart completely if this happens
+                        # level = 1
+                        # enemyCount = 0
+                        # waited = False
+                        playerHealth -= 1
+                        # start = time.time()
+                        print("player dead")
+            
+                    if random.randint(1, 300) == 300 and enemyCount != (level * 3):
+                        match random.randint(1, 4):
+                            case 1:
+                                enemyArr.append(dgZomb)
+                            case 2:
+                                enemyArr.append(lgZomb)
+                            case 3:
+                                enemyArr.append(redZomb)
+                            case 4:
+                                enemyArr.append(purpZomb)
+            
+                        enemyCount += 1
+                        print("appending")
+            
+                    if enemyCount == (level * 3) and not waited:
+                        start = time.time()
+                        waited = True
+            
+                    if enemyCount == (level * 3) and time.time() - start > 5 and waited and level < 4:
+                        print("waited 3 seconds, next level")
+                        enemyCount = 0
+                        level += 1
+                        start = time.time()
+                        waited = False
+                        
+        menu_full.draw(screen)
+        if instructions_button.draw(screen):
+            pygame.display.update()
+            screen.blit(instructText, (740, 500))
+            screen.blit(instructText2, (0, 535))
+            screen.blit(instructText3, (0, 570))
+            screen.blit(instructText4, (0, 605))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         if keys[pygame.K_ESCAPE]:
             run = False
-
-        if keys[pygame.K_a] and charRect.left > -80:
-             charRect = charRect.move(-15, 0)
-        if keys[pygame.K_d] and charRect.right < 1230:
-            charRect = charRect.move(15, 0)
-
-        for i in range(len(enemyArr)):
-            if enemyArr[i].rect.collidepoint(mouse_pos) and event.type == pygame.MOUSEBUTTONDOWN:
-                enemyArr[i].health -= 1
-                shootSound = pygame.mixer.Sound("../sounds/shoot-1-81135.mp3")
-                shootSound.set_volume(0.2)
-                shootSound.play()
-
-            if enemyArr[i].health <= 0:
-                enemyArr[i].canHit = False
-                enemyArr[i].rect = enemyArr[i].rect.move(-5000, -5000)
-
-
-    for i in range(len(enemyArr)):
-        dgZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, dgSprite)
-        lgZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, lgSprite)
-        redZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, redSprite)
-        purpZomb = classes.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, purpleSprite)
-
-
-
-        screen.blit(enemyArr[i].image, enemyArr[i].rect)
-        enemyArr[i].rect = enemyArr[i].rect.move(-(level * 2), 0)
-
-        if charRect.colliderect(enemyArr[i].rect) and playerHealth > 1 and enemyArr[i].canHit:
-            biteSound = pygame.mixer.Sound("../sounds/zombie-bite-96528.mp3")
-            biteSound.set_volume(0.5)
-            biteSound.play()
-            playerHealth -= 1
-            enemyArr[i].canHit = False
-            print("player health:", playerHealth)
-        elif charRect.colliderect(enemyArr[i].rect) and playerHealth == 1:
-            # Game needs to restart completely if this happens
-            # level = 1
-            # enemyCount = 0
-            # waited = False
-            playerHealth -= 1
-            # start = time.time()
-            print("player dead")
-
-        if random.randint(1, 300) == 300 and enemyCount != (level * 3):
-            match random.randint(1, 4):
-                case 1:
-                    enemyArr.append(dgZomb)
-                case 2:
-                    enemyArr.append(lgZomb)
-                case 3:
-                    enemyArr.append(redZomb)
-                case 4:
-                    enemyArr.append(purpZomb)
-
-            enemyCount += 1
-            print("appending")
-
-        if enemyCount == (level * 3) and not waited:
-            start = time.time()
-            waited = True
-
-        if enemyCount == (level * 3) and time.time() - start > 5 and waited and level < 4:
-            print("waited 3 seconds, next level")
-            enemyCount = 0
-            level += 1
-            start = time.time()
-            waited = False
-
     pygame.display.update()
 
     # Slow the game to update 60 times per second
