@@ -187,7 +187,7 @@ while run:
             # start = time.time()
             print("player dead")
 
-        if random.randint(1, 300) == 300 and enemyCount != (level * 2):
+        if random.randint(1, 300) == 300 and enemyCount != (level * 3):
             match random.randint(1, 4):
                 case 1:
                     enemyArr.append(dgZomb)
@@ -201,11 +201,11 @@ while run:
             enemyCount += 1
             print("appending")
 
-        if enemyCount == (level * 2) and not waited:
+        if enemyCount == (level * 3) and not waited:
             start = time.time()
             waited = True
 
-        if enemyCount == (level * 2) and time.time() - start > 5 and waited and level < 4:
+        if enemyCount == (level * 3) and time.time() - start > 5 and waited and level < 4:
             print("waited 3 seconds, next level")
             enemyCount = 0
             level += 1
