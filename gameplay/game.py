@@ -33,9 +33,10 @@ zomb1 = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, ima
 enemyArr = [zomb1]
 
 # level vars
-level = 1
+level = 4
 enemyCount = 0
 waited = False
+difficulty = 3
 
 # create timers/delay
 start = time.time()
@@ -125,15 +126,10 @@ while run:
                 screen.blit(characterSprite, charRect)
                 screen.blit(zomb1.image, zomb1.rect)
                 screen.blit(hearts, images.heartsRect)
+                screen.blit(images.levelText, images.levelText_rect)
 
                 keys = pygame.key.get_pressed()
                 mouse_pos = pygame.mouse.get_pos()
-
-                # levelText = gameFont.render(f"Level: {level}", None, (255, 255, 255))
-                healthText = fonts.gameFont.render(f"Health: {playerHealth}", None, (255, 255, 255))
-
-                screen.blit(images.levelText, images.levelText_rect)
-                # screen.blit(healthText, healthText_rect)
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -157,14 +153,11 @@ while run:
                             enemyArr[i].canHit = False
                             enemyArr[i].rect = enemyArr[i].rect.move(-5000, -5000)
 
-
                 for i in range(len(enemyArr)):
                     dgZomb = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, images.dgSprite)
                     lgZomb = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, images.lgSprite)
                     redZomb = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, images.redSprite)
                     purpZomb = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, images.purpleSprite)
-
-
 
                     screen.blit(enemyArr[i].image, enemyArr[i].rect)
                     enemyArr[i].rect = enemyArr[i].rect.move(-(level * 4), 0)
@@ -176,12 +169,12 @@ while run:
                         playerHealth -= 1
                         enemyArr[i].canHit = False
                         print("player health:", playerHealth)
-                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and level != 5:
+                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and (level != 4 and enemyCount == (level * difficulty)):
                         playerHealth -= 1
                         sounds.biteSound.play()
                         print("player dead")
 
-                    if random.randint(1, 350) == 350 and enemyCount != (level * 3):
+                    if random.randint(1, 350) == 350 and enemyCount != (level * difficulty):
                         match random.randint(1, 4):
                             case 1:
                                 enemyArr.append(dgZomb)
@@ -195,18 +188,18 @@ while run:
                         enemyCount += 1
                         print("appending")
 
-                    if enemyCount == (level * 3) and not waited:
+                    if enemyCount == (level * difficulty) and not waited:
                         start = time.time()
                         waited = True
 
-                    if enemyCount == (level * 3) and time.time() - start > 4 and waited and level <= 4:
+                    if enemyCount == (level * difficulty) and time.time() - start > 4 and waited and level < 4:
                         print("waited 3 seconds, next level")
                         enemyCount = 0
                         level += 1
                         start = time.time()
                         waited = False
 
-                    if playerHealth == 0 and level != 5:
+                    if playerHealth == 0:
                         sounds.biteSound.set_volume(0)
                         sounds.shootSound.set_volume(0)
                         screen.fill("black")
@@ -216,21 +209,22 @@ while run:
                             run = False
                         pygame.display.update()
 
-                    if level == 5:
-                        sounds.biteSound.set_volume(0)
-                        sounds.shootSound.set_volume(0)
+                    if enemyCount == (level * difficulty) and level >= 4:
                         screen.fill("black")
-                        game_overText = fonts.game_overFont.render("YOU WIN", 1, (0, 255, 0))
-                        screen.blit(game_overText, (280, 130))
+                        win_text = fonts.game_overFont.render("YOU WON", 1, (0, 255, 0))
+                        win_text2 = fonts.game_overFont.render("CONGRATS", 1, (255, 255, 255))
+                        screen.blit(win_text, (260, 130))
+                        screen.blit(win_text2, (200, 330))
+                        gameover_button = buttons.Button(600, 560, images.gameoverquit_img, 4)
                         if gameover_button.draw(screen):
                             run = False
-                        pygame.display.update()
                         
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         if keys[pygame.K_ESCAPE]:
             run = False
+
     pygame.display.update()
 
     # Slow the game to update 60 times per second
