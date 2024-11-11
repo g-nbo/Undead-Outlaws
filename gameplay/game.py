@@ -169,10 +169,12 @@ while run:
                         playerHealth -= 1
                         enemyArr[i].canHit = False
                         print("player health:", playerHealth)
-                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and (level != 4 and enemyCount != (level * difficulty)):
+                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and level != 5:
                         playerHealth -= 1
                         sounds.biteSound.play()
                         print("player dead")
+                    else:
+                        print(level)
 
                     if random.randint(1, 350) == 350 and enemyCount != (level * difficulty) and playerHealth > 0:
                         match random.randint(1, 4):
@@ -192,14 +194,14 @@ while run:
                         start = time.time()
                         waited = True
 
-                    if enemyCount == (level * difficulty) and time.time() - start > 4 and waited and level < 4:
+                    if enemyCount == (level * difficulty) and time.time() - start > 4 and waited and level <= 4:
                         print("waited 3 seconds, next level")
                         enemyCount = 0
                         level += 1
                         start = time.time()
                         waited = False
 
-                    if playerHealth == 0:
+                    if playerHealth == 0 and level != 5:
                         sounds.biteSound.set_volume(0)
                         sounds.shootSound.set_volume(0)
                         screen.fill("black")
@@ -209,7 +211,7 @@ while run:
                             run = False
                         pygame.display.update()
 
-                    if enemyCount == (level * difficulty) and level >= 4:
+                    if enemyCount == (level * difficulty) and level > 4:
                         screen.fill("black")
                         win_text = fonts.game_overFont.render("YOU WON", 1, (0, 255, 0))
                         win_text2 = fonts.game_overFont.render("CONGRATS", 1, (255, 255, 255))
