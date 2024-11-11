@@ -33,7 +33,7 @@ zomb1 = enemies.Enemy(SCREEN_WIDTH - 70, SCREEN_HEIGHT - 140, "zombie", 0.5, ima
 enemyArr = [zomb1]
 
 # level vars
-level = 4
+level = 1
 enemyCount = 0
 waited = False
 difficulty = 3
