@@ -169,12 +169,12 @@ while run:
                         playerHealth -= 1
                         enemyArr[i].canHit = False
                         print("player health:", playerHealth)
-                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and (level != 4 and enemyCount == (level * difficulty)):
+                    elif charRect.colliderect(enemyArr[i].rect) and enemyArr[i].canHit and playerHealth == 1 and (level != 4 and enemyCount != (level * difficulty)):
                         playerHealth -= 1
                         sounds.biteSound.play()
                         print("player dead")
 
-                    if random.randint(1, 350) == 350 and enemyCount != (level * difficulty):
+                    if random.randint(1, 350) == 350 and enemyCount != (level * difficulty) and playerHealth > 0:
                         match random.randint(1, 4):
                             case 1:
                                 enemyArr.append(dgZomb)
