@@ -173,8 +173,6 @@ while run:
                         playerHealth -= 1
                         sounds.biteSound.play()
                         print("player dead")
-                    else:
-                        print(level)
 
                     if random.randint(1, 350) == 350 and enemyCount != (level * difficulty) and playerHealth > 0:
                         match random.randint(1, 4):
@@ -188,14 +186,12 @@ while run:
                                 enemyArr.append(purpZomb)
 
                         enemyCount += 1
-                        print("appending")
 
                     if enemyCount == (level * difficulty) and not waited:
                         start = time.time()
                         waited = True
 
                     if enemyCount == (level * difficulty) and time.time() - start > 4 and waited and level <= 4:
-                        print("waited 3 seconds, next level")
                         enemyCount = 0
                         level += 1
                         start = time.time()
