@@ -44,7 +44,7 @@ start = time.time()
 play_button = buttons.Button(610, 300, images.play_img, 1)
 quit_button = buttons.Button(605, 530, images.quit_img, 1)
 instructions_button = buttons.Button(600, 415, images.instruct_img, 1)
-gameover_button = buttons.Button(600, 480, images.gameoverquit_img, 4)
+gameover_button = buttons.Button(610, 465, images.gameoverquit_img, 1)
 
 # menu state for switching menus
 menu_state = "main"
@@ -200,20 +200,14 @@ while run:
                     if playerHealth == 0 and level != 5:
                         sounds.biteSound.set_volume(0)
                         sounds.shootSound.set_volume(0)
-                        screen.fill("black")
-                        game_overText = fonts.game_overFont.render("GAME OVER", 1, (255, 0, 0))
-                        screen.blit(game_overText, (180, 130))
+                        screen.blit(images.lose_img, (0, 0))
                         if gameover_button.draw(screen):
                             run = False
-                        pygame.display.update()
 
                     if enemyCount == (level * difficulty) and level > 4:
-                        screen.fill("black")
-                        win_text = fonts.game_overFont.render("YOU WON", 1, (0, 255, 0))
-                        win_text2 = fonts.game_overFont.render("CONGRATS", 1, (255, 255, 255))
-                        screen.blit(win_text, (260, 130))
-                        screen.blit(win_text2, (200, 330))
-                        gameover_button = buttons.Button(600, 560, images.gameoverquit_img, 4)
+                        sounds.biteSound.set_volume(0)
+                        sounds.shootSound.set_volume(0)
+                        screen.blit(images.win_img, (0, 0))
                         if gameover_button.draw(screen):
                             run = False
                         
