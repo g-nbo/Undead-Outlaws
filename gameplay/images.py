@@ -37,3 +37,8 @@ gameoverquit_img = pygame.image.load("../images/gameoverquit.png").convert_alpha
 
 menu_full = pygame.image.load("../images/menuimage.png").convert_alpha()
 menu_full = pygame.transform.scale(menu_full, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+win_img = pygame.image.load("../images/winimage.png")
+win_img = pygame.transform.scale(win_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+lose_img = pygame.image.load("../images/loseimage.png")
+lose_img = pygame.transform.scale(lose_img, (SCREEN_WIDTH, SCREEN_HEIGHT))
